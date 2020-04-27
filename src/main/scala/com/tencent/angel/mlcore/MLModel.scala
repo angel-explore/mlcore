@@ -19,7 +19,7 @@ package com.tencent.angel.mlcore
 
 import com.tencent.angel.mlcore.variable.VarState.VarState
 import com.tencent.angel.ml.math2.matrix.Matrix
-import com.tencent.angel.ml.math2.utils.{LabeledData, RowType}
+import com.tencent.angel.ml.math2.utils.{DataBlock, LabeledData, RowType}
 import com.tencent.angel.ml.math2.vector.Vector
 import com.tencent.angel.mlcore.conf.SharedConf
 import com.tencent.angel.ml.math2.utils.DataBlock
@@ -102,6 +102,13 @@ abstract class MLModel(val conf: SharedConf) {
   //  }
 
   //---------------------Training Cycle
+
+  /**
+    * 创建矩阵
+    * @param envCtx
+    * @tparam T
+    * @return
+    */
   def createMatrices[T](envCtx: EnvContext[T]): this.type = {
     variableManager.createALL[T](envCtx)
     this
@@ -112,11 +119,21 @@ abstract class MLModel(val conf: SharedConf) {
     this
   }
 
+  /**
+    *
+    * @param epoch 迭代次数
+    * @param indices 向量索引
+    * @return
+    */
   def pullParams(epoch: Int, indices: Vector = null): this.type = {
     variableManager.pullALL(epoch, indices)
     this
   }
 
+  /**
+    * @param lr 梯度值
+    * @return
+    */
   def pushSlot(lr: Double): this.type = {
     variableManager.pushALL(lr)
     this
@@ -127,6 +144,14 @@ abstract class MLModel(val conf: SharedConf) {
     this
   }
 
+  /**
+    * 加载模型
+    * @param envCtx
+    * @param path
+    * @param conf
+    * @tparam T
+    * @return
+    */
   def loadModel[T](envCtx: EnvContext[T], path: String, conf: Configuration): this.type = {
     variableManager.loadALL[T](envCtx, path, conf)
     this
@@ -137,6 +162,13 @@ abstract class MLModel(val conf: SharedConf) {
     this
   }
 
+  /**
+    * 保存模型
+    * @param envCtx
+    * @param path
+    * @tparam T
+    * @return
+    */
   def saveModel[T](envCtx: EnvContext[T], path: String): this.type = {
     variableManager.saveALL[T](envCtx, path)
     this
@@ -149,6 +181,12 @@ abstract class MLModel(val conf: SharedConf) {
   }
 
   //---------------------Predict
+  /**
+    * 根据模型和预测数据得到预测的结果，需要由具体的模型（PSModel）来实现预测流程
+    *
+    * @param storage DataBlock[LabeledData] 预测数据
+    * @return List[PredictResult] 预测结果
+    */
   def predict(storage: DataBlock[LabeledData]): List[PredictResult]
 
   def predict(storage: LabeledData): PredictResult

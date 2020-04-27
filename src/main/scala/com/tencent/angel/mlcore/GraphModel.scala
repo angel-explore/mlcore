@@ -41,6 +41,11 @@ abstract class GraphModel(conf: SharedConf) extends MLModel(conf) {
     this
   }
 
+  /**
+    * 由具体的模型实现该方法
+    *
+    * @return
+    */
   def buildNetwork(): this.type
 
   override def addVariable(variable: Variable): this.type = {
