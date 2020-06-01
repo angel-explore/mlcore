@@ -17,14 +17,14 @@
 package com.tencent.angel.mlcore.network
 
 
-import com.tencent.angel.mlcore.utils.JsonUtils._
 import com.tencent.angel.ml.math2.matrix.Matrix
 import com.tencent.angel.ml.math2.utils.LabeledData
 import com.tencent.angel.ml.math2.vector.Vector
 import com.tencent.angel.mlcore.PredictResult
 import com.tencent.angel.mlcore.conf.SharedConf
-import com.tencent.angel.mlcore.network.layers.{InputLayer, JoinLayer, Layer, LinearLayer, LossLayer, Trainable}
+import com.tencent.angel.mlcore.network.layers._
 import com.tencent.angel.mlcore.optimizer.loss.LossFunc
+import com.tencent.angel.mlcore.utils.JsonUtils._
 import com.tencent.angel.mlcore.utils.{DataCache, MLException, TimeStats}
 import com.tencent.angel.mlcore.variable.VariableProvider
 import org.apache.commons.logging.{Log, LogFactory}
@@ -34,7 +34,7 @@ import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
 
 
-class Graph(val provider: VariableProvider, val conf: SharedConf, val taskNum: Int){
+class Graph(val provider: VariableProvider, val conf: SharedConf, val taskNum: Int) {
   private val LOG: Log = LogFactory.getLog(classOf[Graph])
 
   protected val inputLayers = new ListBuffer[InputLayer]()
@@ -135,8 +135,14 @@ class Graph(val provider: VariableProvider, val conf: SharedConf, val taskNum: I
     batchSize
   }
 
+  /**
+    * 获取数据
+    *
+    * @param data
+    * @return
+    */
   def feedData(data: Array[LabeledData]): this.type = {
-    batchSize = data.length
+    batchSize = data.length //数据大小
     placeHolder.feedData(data)
 
     this

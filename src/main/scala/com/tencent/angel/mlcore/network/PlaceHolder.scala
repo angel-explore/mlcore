@@ -49,6 +49,10 @@ class PlaceHolder(val conf: SharedConf) extends Serializable {
 
   def getRawData: Array[LabeledData] = data
 
+  /**
+    *
+    * @param data
+    */
   def feedData(data: Array[LabeledData]): Unit = {
     feats = null
     labels = null

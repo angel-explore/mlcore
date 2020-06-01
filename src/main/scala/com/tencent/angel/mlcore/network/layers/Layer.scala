@@ -74,6 +74,10 @@ abstract class Layer(val name: String, val outputDim: Int)(implicit val graph: G
 
   def getAllInputNames: List[String] = inputs.keys.toList
 
+  /**
+    *
+    * @param layer
+    */
   def addConsumer(layer: Layer): Unit = {
     consumer.put(layer.name, layer)
   }
